@@ -3,7 +3,7 @@
 
 Welcome to our engineering hiring process. This take-home project evaluates your full-stack development workflow, code quality, and architectural decision-making.
 
-> **Time guidance:** We estimate 6-8 hours of focused work. You have **7–10 days** from receiving this link — that is a ceiling, not a target. Submit when you are done and comfortable explaining every line.
+> **Time guidance:** We estimate 6-8 hours of focused work. You have **7 days** from receiving this link — that is a ceiling, not a target. Submit when you are done and comfortable explaining every line.
 
 ---
 
