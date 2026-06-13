@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: task-tracker-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && npm run start:prod
+    healthCheckPath: /tasks
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: task-tracker-db
+          property: connectionString
+      - key: FRONTEND_URL
+        sync: false
+      - key: NODE_ENV
+        value: production
+
+databases:
+  - name: task-tracker-db
+    plan: free
+    databaseName: tasktracker
+    user: tasktracker

@@ -1,51 +1,45 @@
-# Task Tracker — Engineering Assessment
+# Task Tracker
 
-See [REQUIREMENTS.md](./REQUIREMENTS.md) for the full project brief.
+Full-stack task management app with a Next.js frontend, NestJS REST API, and PostgreSQL database.
 
-## Getting started
-1. Clone this repo
-2. Create a branch: `feature/your-name-submission`
-3. Build the project per the requirements
-4. Open a PR against `main` when done — do not merge it
+## Live Demo
 
----
+- **Frontend:** Deploy on [Vercel](https://vercel.com) (root directory: `frontend`)
+- **Backend API:** Deploy on [Render](https://render.com) using `render.yaml`
+- **Database:** PostgreSQL (Render managed database via blueprint)
 
+## Tech Stack
 
-<!-- ============================================================ -->
- **CANDIDATE: Fill in the three sections below before your PR**  
-<!-- ============================================================ -->
+| Layer | Technology |
+|---|---|
+| Frontend | React + Next.js |
+| Backend | NestJS |
+| Database | PostgreSQL + Prisma ORM |
 
-
-
-## Setup Instructions
-
- *Replace this section with your actual setup steps.
-     A reviewer should go from fresh clone to running app in under 5 minutes.* 
-
-
+## Local Development
 
 **Prerequisites:**
 - Node.js >= 18
-- PostgreSQL running locally (or use the provided Docker Compose)
+- PostgreSQL (or Docker Compose)
 
 **Steps:**
 
 ```bash
-# 1. Install dependencies
+# 1. Start PostgreSQL
+docker compose up -d
+
+# 2. Install dependencies
 cd backend && npm install
 cd ../frontend && npm install
 
-# 2. Configure environment variables
+# 3. Configure environment
 cp backend/.env.example backend/.env
-# Edit backend/.env with your database connection string
+cp frontend/.env.example frontend/.env.local
 
-# 3. Run database migrations
-cd backend && npx prisma migrate deploy
+# 4. Run migrations and seed
+cd backend && npx prisma migrate deploy && npx prisma db seed
 
-# 4. Seed sample data
-npx prisma db seed
-
-# 5. Start both services
+# 5. Start services
 # Terminal 1 — backend
 cd backend && npm run start:dev
 
@@ -53,24 +47,56 @@ cd backend && npm run start:dev
 cd frontend && npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the app.
-Backend API available at [http://localhost:3001](http://localhost:3001).
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:3001
 
----
+## Deployment
 
-## Architectural Decisions
+### 1. Push to GitHub
 
-*Replace this with 2–4 paragraphs covering:
-     How you structured the codebase and why, 
-     Any meaningful schema or API design choices, 
-     Where and how you used AI tools, and what you verified*
+This repo is ready to deploy from GitHub.
 
+### 2. Deploy backend + database (Render)
 
+1. Go to [Render Dashboard](https://dashboard.render.com) → **New** → **Blueprint**
+2. Connect your GitHub repo
+3. Render reads `render.yaml` and creates:
+   - PostgreSQL database (`task-tracker-db`)
+   - NestJS API (`task-tracker-api`)
+4. After deploy, copy the API URL (e.g. `https://task-tracker-api.onrender.com`)
+5. In Render → **task-tracker-api** → **Environment**, set:
+   - `FRONTEND_URL` = your Vercel frontend URL (set after step 3)
 
----
+### 3. Deploy frontend (Vercel)
 
-## Future Enhancements
+1. Go to [Vercel](https://vercel.com) → **Add New Project**
+2. Import this GitHub repo
+3. Set **Root Directory** to `frontend`
+4. Add environment variable:
+   - `NEXT_PUBLIC_API_URL` = your Render API URL
+5. Deploy
 
-*Replace this with specific features you would build next.
-     Name the feature, explain why it matters, and describe how you would implement it.*
+### 4. Finish CORS setup
 
+Return to Render and set `FRONTEND_URL` on the backend to your Vercel URL, then redeploy the API.
+
+## API Routes
+
+| Method | Route | Description |
+|---|---|---|
+| `GET` | `/tasks` | List all tasks |
+| `POST` | `/tasks` | Create a task |
+| `PATCH` | `/tasks/:id` | Update a task |
+| `DELETE` | `/tasks/:id` | Delete a task |
+
+## Project Structure
+
+```
+task-tracker/
+├── frontend/          # Next.js app (port 3000)
+├── backend/           # NestJS API (port 3001)
+│   └── prisma/        # Schema + migrations
+├── docker-compose.yml # Local PostgreSQL
+├── render.yaml        # Render deployment blueprint
+└── README.md
+```
